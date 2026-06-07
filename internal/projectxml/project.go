@@ -36,12 +36,12 @@ type TargetConfig struct {
 }
 
 type OwnedSchema struct {
-	Name string
+	Name string `xml:"Name,attr"`
 }
 
 type TargetExtension struct {
-	Name    string
-	Version string
+	Name    string `xml:"Name,attr"`
+	Version string `xml:"Version,attr"`
 }
 
 type ComparisonConfig struct {

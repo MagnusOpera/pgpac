@@ -15,6 +15,7 @@ import (
 var (
 	tableCommentPattern  = regexp.MustCompile(`(?i)^COMMENT ON TABLE ([a-zA-Z0-9_".]+) IS ('(?:[^']|'')*'|NULL)$`)
 	columnCommentPattern = regexp.MustCompile(`(?i)^COMMENT ON COLUMN ([a-zA-Z0-9_".]+)\.([a-zA-Z0-9_".]+)\.([a-zA-Z0-9_".]+) IS ('(?:[^']|'')*'|NULL)$`)
+	extensionVersionPattern = regexp.MustCompile(`(?i)\bVERSION\s+("?[^"\s]+"?|'[^']+')`)
 )
 
 func BuildDesiredModel(project *projectxml.Project) (*model.SchemaModel, error) {
@@ -71,12 +72,7 @@ func addStatement(m *model.SchemaModel, defaultSchema, stmtText string) error {
 		return nil
 	case stmt.GetCreateExtensionStmt() != nil:
 		node := stmt.GetCreateExtensionStmt()
-		version := ""
-		for _, opt := range node.GetOptions() {
-			if def := opt.GetDefElem(); def != nil && strings.EqualFold(def.GetDefname(), "version") {
-				version = stringValue(def.GetArg())
-			}
-		}
+		version := parseCreateExtensionVersion(sql)
 		m.Extensions = append(m.Extensions, model.ExtensionDef{Name: node.GetExtname(), Version: version, SQL: sql})
 		return nil
 	case stmt.GetCreateStmt() != nil:
@@ -155,6 +151,14 @@ func addStatement(m *model.SchemaModel, defaultSchema, stmtText string) error {
 	default:
 		return fmt.Errorf("unsupported statement kind")
 	}
+}
+
+func parseCreateExtensionVersion(sql string) string {
+	matches := extensionVersionPattern.FindStringSubmatch(sql)
+	if len(matches) != 2 {
+		return ""
+	}
+	return strings.Trim(matches[1], `"'`)
 }
 
 func rangeVarName(rel interface {

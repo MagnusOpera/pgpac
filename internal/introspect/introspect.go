@@ -358,7 +358,12 @@ order by n.nspname, t.typname`, ownedSchemas)
 			return err
 		}
 		sql := fmt.Sprintf("CREATE TYPE %s AS ENUM (%s)", model.QualifiedName(quoteIdent(schema), quoteIdent(name)), labels)
-		m.Enums = append(m.Enums, model.EnumDef{Schema: schema, Name: name, SQL: model.CanonicalSQL(sql)})
+		m.Enums = append(m.Enums, model.EnumDef{
+			Schema: schema,
+			Name:   name,
+			Values: parseEnumLabels(labels),
+			SQL:    model.CanonicalSQL(sql),
+		})
 	}
 	return rows.Err()
 }
@@ -470,4 +475,16 @@ func deref(ptr *string) string {
 		return ""
 	}
 	return *ptr
+}
+
+func parseEnumLabels(labels string) []string {
+	if labels == "" {
+		return nil
+	}
+	parts := strings.Split(labels, ", ")
+	values := make([]string, 0, len(parts))
+	for _, part := range parts {
+		values = append(values, strings.Trim(part, `'`))
+	}
+	return values
 }

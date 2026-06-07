@@ -2,3 +2,4 @@ out/
 dist/
 *.pgpkg
 coverage.out
+.DS_Store
