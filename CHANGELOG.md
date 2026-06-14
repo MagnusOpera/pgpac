@@ -4,7 +4,12 @@ All notable changes to pgpackage are documented in this file.
 
 ## [Unreleased]
 
+## [0.0.2]
+
+
 - Limited release artifacts to Linux arm64 and macOS arm64 only, removing Windows and macOS x64 targets.
+
+**Full Changelog**: https://github.com/MagnusOpera/pgpackage/compare/0.0.1...0.0.2
 
 ## [0.0.1]
 
