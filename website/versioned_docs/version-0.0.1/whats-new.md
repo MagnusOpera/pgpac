@@ -1,11 +1,12 @@
-# Changelog
+---
+id: whats-new
+title: What's New
+slug: /whats-new
+---
 
-All notable changes to pgpackage are documented in this file.
+For the complete history, see the full [CHANGELOG.md](https://github.com/MagnusOpera/pgpackage/blob/main/CHANGELOG.md) on GitHub.
 
-## [Unreleased]
-
-## [0.0.1]
-
+## 0.0.1
 
 - Added Docusaurus website scaffolding, docs versioning, and GitHub Pages release deployment.
 - Added changelog-gated CI, draft GitHub release automation, and Homebrew tap update workflows.
@@ -13,4 +14,3 @@ All notable changes to pgpackage are documented in this file.
 - Added macOS Developer ID signing and notarization to the release workflow for GitHub Release and Homebrew distribution.
 
 **Full Changelog**: https://github.com/MagnusOpera/pgpackage/compare/b015550b6a7bbd28f781fb3662935e7752cd1532...0.0.1
-
