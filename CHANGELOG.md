@@ -4,6 +4,8 @@ All notable changes to pgpackage are documented in this file.
 
 ## [Unreleased]
 
+- Reworked the website home page to better explain pgpackage as desired-state schema management for PostgreSQL.
+
 ## [0.0.2]
 
 

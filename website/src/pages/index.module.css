@@ -1,17 +1,23 @@
 .heroBanner {
   padding: 4.5rem 0 3rem;
   background:
-    radial-gradient(circle at top left, rgba(231, 125, 17, 0.22), transparent 32%),
-    radial-gradient(circle at right center, rgba(24, 122, 170, 0.18), transparent 28%),
-    linear-gradient(135deg, #0e2433 0%, #1f425a 52%, #f1f5f8 52%, #f1f5f8 100%);
+    radial-gradient(circle at top left, rgba(231, 125, 17, 0.22), transparent 30%),
+    radial-gradient(circle at right top, rgba(24, 122, 170, 0.2), transparent 26%),
+    linear-gradient(135deg, #0d2230 0%, #17394c 46%, #eef4f7 46%, #eef4f7 100%);
+}
+
+.heroBanner :global(.container) {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(20rem, 0.95fr);
+  gap: 1.5rem;
+  align-items: stretch;
 }
 
 .heroPanel {
-  max-width: 54rem;
   padding: 2.25rem;
   border-radius: 1.5rem;
-  background: rgba(255, 255, 255, 0.9);
-  box-shadow: 0 22px 60px rgba(14, 36, 51, 0.2);
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 22px 60px rgba(14, 36, 51, 0.18);
 }
 
 .eyebrow {
@@ -31,7 +37,6 @@
 }
 
 .heroSubtitle {
-  max-width: 42rem;
   font-size: 1.1rem;
   line-height: 1.7;
   color: #314455;
@@ -44,13 +49,164 @@
   margin-top: 1.6rem;
 }
 
+.principles {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.9rem;
+  margin-top: 2rem;
+}
+
+.principleCard {
+  padding: 1rem;
+  border: 1px solid rgba(22, 54, 72, 0.12);
+  border-radius: 1rem;
+  background: rgba(239, 245, 248, 0.8);
+}
+
+.principleLabel {
+  margin: 0 0 0.35rem;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #102431;
+}
+
+.principleText {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #405266;
+}
+
+.codePanel {
+  align-self: end;
+  padding: 1.4rem;
+  border-radius: 1.5rem;
+  background: #102431;
+  color: #dbe9f2;
+  box-shadow: 0 22px 60px rgba(10, 24, 34, 0.26);
+}
+
+.codeLabel {
+  margin: 0 0 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #ffb577;
+}
+
+.codeBlock {
+  margin: 0;
+  padding: 1.2rem;
+  overflow-x: auto;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 1rem;
+  background: rgba(6, 15, 21, 0.5);
+  color: #f4f8fb;
+  line-height: 1.7;
+}
+
+.codeFootnote {
+  margin: 0.9rem 0 0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #bdd0dc;
+}
+
+.storySection {
+  padding: 1rem 0 1rem;
+}
+
+.storyIntro {
+  max-width: 52rem;
+  margin-bottom: 2rem;
+}
+
+.sectionEyebrow {
+  margin: 0 0 0.6rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #a95200;
+}
+
+.sectionTitle {
+  margin-bottom: 0.9rem;
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 1.02;
+  color: #102431;
+}
+
+.sectionText {
+  margin: 0;
+  font-size: 1.08rem;
+  line-height: 1.75;
+  color: #314455;
+}
+
+.workflowGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.workflowCard {
+  padding: 1.4rem;
+  border: 1px solid rgba(36, 58, 80, 0.12);
+  border-radius: 1.1rem;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(239, 244, 248, 0.92));
+  box-shadow: 0 14px 36px rgba(28, 46, 62, 0.08);
+}
+
+.workflowStep {
+  margin: 0 0 0.7rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #b1540f;
+}
+
+.workflowTitle {
+  margin-bottom: 0.7rem;
+  font-size: 1.18rem;
+}
+
+.workflowText {
+  margin: 0;
+  color: #405266;
+  line-height: 1.7;
+}
+
 @media (max-width: 996px) {
   .heroBanner {
     padding-top: 3rem;
-    background: linear-gradient(180deg, #0e2433 0%, #1f425a 36%, #f1f5f8 36%, #f1f5f8 100%);
+    background: linear-gradient(180deg, #0d2230 0%, #17394c 28%, #eef4f7 28%, #eef4f7 100%);
+  }
+
+  .heroBanner :global(.container) {
+    grid-template-columns: 1fr;
   }
 
   .heroPanel {
     padding: 1.5rem;
+  }
+
+  .principles,
+  .workflowGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .heroTitle {
+    line-height: 1;
+  }
+
+  .codePanel,
+  .workflowCard,
+  .principleCard {
+    border-radius: 1rem;
   }
 }

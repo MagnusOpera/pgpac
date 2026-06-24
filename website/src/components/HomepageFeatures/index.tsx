@@ -9,19 +9,19 @@ type FeatureItem = {
 
 const FeatureList: FeatureItem[] = [
   {
-    title: 'Build portable schema packages',
+    title: 'Git is the timeline',
     description:
-      'Compile a PostgreSQL project file plus SQL sources into a self-contained .pgpkg artifact with manifest and checksums.',
+      'The SQL files are the desired schema. History, review, and rollback discussion stay in normal source control where teams already work.',
   },
   {
-    title: 'Inspect live drift before execution',
+    title: 'The target database is the comparison point',
     description:
-      'Generate ordered plans against a real target database and choose between text, JSON, or rendered SQL output.',
+      'Plans are produced by comparing the packaged desired state with what PostgreSQL actually contains, not by assuming every migration ran perfectly.',
   },
   {
-    title: 'Apply changes with explicit safety gates',
+    title: 'Change execution stays explicit',
     description:
-      'Destructive operations stay blocked until the project or operator explicitly opts in, keeping release automation predictable.',
+      'Build artifacts, inspect the computed plan, and apply with destructive-operation gates when the team intentionally allows them.',
   },
 ];
 

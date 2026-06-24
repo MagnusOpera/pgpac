@@ -1,5 +1,5 @@
 .features {
-  padding: 2rem 0 4rem;
+  padding: 1.5rem 0 4rem;
 }
 
 .featureCard {
@@ -13,9 +13,11 @@
 
 .featureCard h3 {
   margin-bottom: 0.75rem;
+  color: #102431;
 }
 
 .featureCard p {
   margin: 0;
   color: #405266;
+  line-height: 1.7;
 }
