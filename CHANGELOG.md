@@ -4,6 +4,7 @@ All notable changes to pgpackage are documented in this file.
 
 ## [Unreleased]
 
+- Fixed release preparation to clear website build cache before reinstalling docs dependencies.
 - Improved the website home page responsive layout on mobile screens.
 
 ## [0.1.0]

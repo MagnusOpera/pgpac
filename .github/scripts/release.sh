@@ -34,30 +34,33 @@ if git rev-parse -q --verify "refs/tags/${version}" >/dev/null; then
   exit 1
 fi
 
+existing_version_section=false
 if grep -q "^## \[${version}\]$" CHANGELOG.md; then
-  echo "ERROR: CHANGELOG section '## [${version}]' already exists."
-  exit 1
+  existing_version_section=true
 fi
 
 section_header="## [Unreleased]"
 
-unreleased_body="$(
-  awk -v header="$section_header" '
-    BEGIN { in_section = 0 }
-    $0 == header { in_section = 1; next }
-    /^## \[/ && in_section { exit }
-    in_section { print }
-  ' CHANGELOG.md
-)"
+unreleased_body=""
+if [[ "$existing_version_section" == "false" ]]; then
+  unreleased_body="$(
+    awk -v header="$section_header" '
+      BEGIN { in_section = 0 }
+      $0 == header { in_section = 1; next }
+      /^## \[/ && in_section { exit }
+      in_section { print }
+    ' CHANGELOG.md
+  )"
 
-if [[ -z "${unreleased_body//[[:space:]]/}" ]]; then
-  echo "ERROR: Unreleased section is empty."
-  exit 1
-fi
+  if [[ -z "${unreleased_body//[[:space:]]/}" ]]; then
+    echo "ERROR: Unreleased section is empty."
+    exit 1
+  fi
 
-if ! grep -q '^[[:space:]]*-\s\+' <<<"$unreleased_body"; then
-  echo "ERROR: Unreleased section must include at least one bullet."
-  exit 1
+  if ! grep -q '^[[:space:]]*-\s\+' <<<"$unreleased_body"; then
+    echo "ERROR: Unreleased section must include at least one bullet."
+    exit 1
+  fi
 fi
 
 candidate_tags="$(git tag --list | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' | sort -Vu || true)"
@@ -101,60 +104,82 @@ stripped_changelog="${tmp_dir}/changelog-stripped.md"
 new_section_file="${tmp_dir}/new-section.md"
 updated_changelog="${tmp_dir}/CHANGELOG.md"
 
-awk '
-  BEGIN { skip = 0 }
-  $0 == "## [Unreleased]" {
-    print
-    print ""
-    skip = 1
-    next
-  }
-  skip && /^## \[/ { skip = 0 }
-  !skip { print }
-' CHANGELOG.md > "$stripped_changelog"
-
-{
-  echo "## [${version}]"
-  echo ""
-  printf "%s\n" "$unreleased_body"
-  echo ""
-  echo "$compare_link"
-} > "$new_section_file"
-
-awk -v section_file="$new_section_file" '
-  BEGIN { inserted = 0; skip_next_blank = 0 }
-  $0 == "## [Unreleased]" && inserted == 0 {
-    print
-    print ""
-    while ((getline line < section_file) > 0) {
-      print line
+if [[ "$existing_version_section" == "false" ]]; then
+  awk '
+    BEGIN { skip = 0 }
+    $0 == "## [Unreleased]" {
+      print
+      print ""
+      skip = 1
+      next
     }
-    close(section_file)
-    print ""
-    inserted = 1
-    skip_next_blank = 1
-    next
-  }
-  skip_next_blank == 1 && $0 == "" {
-    skip_next_blank = 0
-    next
-  }
-  { print }
-' "$stripped_changelog" > "$updated_changelog"
+    skip && /^## \[/ { skip = 0 }
+    !skip { print }
+  ' CHANGELOG.md > "$stripped_changelog"
 
-if ! grep -q "^## \[${version}\]$" "$updated_changelog"; then
-  echo "ERROR: Failed to materialize CHANGELOG section for ${version}."
-  exit 1
+  {
+    echo "## [${version}]"
+    echo ""
+    printf "%s\n" "$unreleased_body"
+    echo ""
+    echo "$compare_link"
+  } > "$new_section_file"
+
+  awk -v section_file="$new_section_file" '
+    BEGIN { inserted = 0; skip_next_blank = 0 }
+    $0 == "## [Unreleased]" && inserted == 0 {
+      print
+      print ""
+      while ((getline line < section_file) > 0) {
+        print line
+      }
+      close(section_file)
+      print ""
+      inserted = 1
+      skip_next_blank = 1
+      next
+    }
+    skip_next_blank == 1 && $0 == "" {
+      skip_next_blank = 0
+      next
+    }
+    { print }
+  ' "$stripped_changelog" > "$updated_changelog"
+
+  if ! grep -q "^## \[${version}\]$" "$updated_changelog"; then
+    echo "ERROR: Failed to materialize CHANGELOG section for ${version}."
+    exit 1
+  fi
+else
+  if ! awk -v version="$version" '
+    BEGIN { in_section = 0; has_bullet = 0; has_compare = 0 }
+    $0 == "## [" version "]" { in_section = 1; next }
+    /^## \[/ && in_section { exit }
+    in_section && /^[[:space:]]*-\s+/ { has_bullet = 1 }
+    in_section && /^\*\*Full Changelog\*\*: / { has_compare = 1 }
+    END { exit !(has_bullet && has_compare) }
+  ' CHANGELOG.md; then
+    echo "ERROR: Existing CHANGELOG section '## [${version}]' is incomplete. Fix it or revert before rerunning release."
+    exit 1
+  fi
 fi
 
 if [[ "$dryrun" == "true" ]]; then
-  echo "[DRY RUN] Would update CHANGELOG.md, version website docs, commit and create annotated tag '${version}'."
+  if [[ "$existing_version_section" == "true" ]]; then
+    echo "[DRY RUN] Would resume release preparation for ${version} from the existing CHANGELOG section."
+  else
+    echo "[DRY RUN] Would update CHANGELOG.md, version website docs, commit and create annotated tag '${version}'."
+  fi
   echo "[DRY RUN] Previous tag: ${previous_tag}"
   echo "[DRY RUN] Compare link: ${compare_link}"
   exit 0
 fi
 
-cp "$updated_changelog" CHANGELOG.md
+if [[ "$existing_version_section" == "false" ]]; then
+  cp "$updated_changelog" CHANGELOG.md
+else
+  echo "Resuming release preparation for ${version} from the existing CHANGELOG section."
+fi
 
 if [[ -d website ]]; then
   if ! command -v npm >/dev/null 2>&1; then
@@ -165,6 +190,7 @@ if [[ -d website ]]; then
   echo "Preparing website docs version ${version}..."
   (
     cd website
+    rm -rf node_modules/.cache
     npm ci
     npm run version-docs -- "${version}"
     PGPACKAGE_DOCS_LAST_VERSION="${version}" npm run build
