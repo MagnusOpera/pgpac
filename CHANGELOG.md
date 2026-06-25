@@ -4,6 +4,8 @@ All notable changes to pgpac are documented in this file.
 
 ## [Unreleased]
 
+- Added the MIT license for repository distribution and reuse.
+
 ## [0.3.0]
 
 

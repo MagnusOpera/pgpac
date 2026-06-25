@@ -75,3 +75,7 @@ Current compatibility policy:
 - Releases are prepared with `make release-prepare version=X.Y.Z`.
 - Tagged builds create draft GitHub releases with platform archives.
 - Published releases deploy the website to GitHub Pages and update `magnusopera/homebrew-tap`.
+
+## License
+
+This repository is licensed under the MIT License. See [LICENSE](/LICENSE).
