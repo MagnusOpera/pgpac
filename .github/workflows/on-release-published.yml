@@ -55,7 +55,7 @@ jobs:
         uses: actions/deploy-pages@v4
 
   sign-and-notarize:
-    runs-on: macos-latest
+    runs-on: macos-15
     steps:
       - name: Download unsigned macOS artifacts
         uses: robinraju/release-downloader@v1.11

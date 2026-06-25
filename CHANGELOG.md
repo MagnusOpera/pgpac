@@ -4,6 +4,8 @@ All notable changes to pgpackage are documented in this file.
 
 ## [Unreleased]
 
+- Pinned the macOS notarization release job to macOS 15 so published releases keep using the expected Xcode toolchain.
+
 ## [0.2.0]
 
 
