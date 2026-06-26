@@ -79,7 +79,20 @@ jobs:
       - name: Sign binaries
         run: |
           set -euo pipefail
-          codesign --force --timestamp --sign "Developer ID Application: Magnus Opera (${{ secrets.MAC_DEV_TEAM_ID }})" .out/darwin/arm64/pgpac --options=runtime --identifier "${{ secrets.MAC_CERT_BUNDLE_ID }}.arm64"
+          expected_identifier="io.magnusopera.pgpac.arm64"
+          codesign \
+            --force \
+            --timestamp \
+            --options=runtime \
+            --identifier "$expected_identifier" \
+            --sign "Developer ID Application: Magnus Opera (${{ secrets.MAC_DEV_TEAM_ID }})" \
+            .out/darwin/arm64/pgpac
+          codesign --verify --verbose=4 .out/darwin/arm64/pgpac
+          actual_identifier="$(codesign -dv --verbose=4 .out/darwin/arm64/pgpac 2>&1 | sed -n 's/^Identifier=//p')"
+          if [ "$actual_identifier" != "$expected_identifier" ]; then
+            echo "Expected codesign identifier '$expected_identifier' but found '$actual_identifier'" >&2
+            exit 1
+          fi
           (cd .out/darwin/arm64; zip -q -r ../pgpac-${{ github.ref_name }}-darwin-arm64.zip ./pgpac)
 
       - name: Notarize arm64
