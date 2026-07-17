@@ -4,6 +4,8 @@ All notable changes to pgpac are documented in this file.
 
 ## [Unreleased]
 
+- Redesigned the website home page to present pgpac as desired-state schema management for PostgreSQL.
+
 ## [0.4.0]
 
 

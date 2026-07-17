@@ -1,120 +1,216 @@
 import Link from '@docusaurus/Link';
 import Layout from '@theme/Layout';
 import Heading from '@theme/Heading';
-import HomepageFeatures from '@site/src/components/HomepageFeatures';
 import styles from './index.module.css';
-
-const principles = [
-  {
-    label: 'Desired state in SQL',
-    text: 'Your schema files describe what PostgreSQL should look like now.',
-  },
-  {
-    label: 'Git holds the history',
-    text: 'Review normal SQL diffs instead of maintaining a migration narrative.',
-  },
-  {
-    label: 'pgpac computes the delta',
-    text: 'Build, compare, and apply against the live database only when you are ready.',
-  },
-];
 
 const workflow = [
   {
-    step: '01',
-    title: 'Model the schema you want',
-    text: 'Tables, views, functions, types, and security live as source-controlled SQL files.',
+    number: '01',
+    verb: 'Describe',
+    title: 'Write the database you want',
+    text: 'Keep tables, views, functions, types, and permissions as standard SQL files. Comparing schema versions is as simple as reviewing a normal source-control diff.',
+    command: 'pgpac build',
   },
   {
-    step: '02',
-    title: 'Diff desired state against reality',
-    text: 'pgpac inspects the target database and generates an ordered plan from actual drift.',
+    number: '02',
+    verb: 'Compare',
+    title: 'See the exact path forward',
+    text: 'pgpac compares the package with the live PostgreSQL database and produces an ordered, inspectable plan.',
+    command: 'pgpac plan',
   },
   {
-    step: '03',
-    title: 'Apply with reviewable safety gates',
-    text: 'Teams can inspect text, JSON, or SQL output before execution, with destructive changes explicitly gated.',
+    number: '03',
+    verb: 'Converge',
+    title: 'Update reality to match',
+    text: 'Apply the reviewed delta. Potentially destructive operations stay behind explicit safety gates.',
+    command: 'pgpac apply',
   },
 ];
+
+const qualities = [
+  ['SQL stays SQL', 'No proprietary schema language. Your database definition remains readable by people and PostgreSQL.'],
+  ['Drift is visible', 'The live target is always part of the comparison, so a plan starts from reality—not an assumption.'],
+  ['CI-friendly by design', 'Build once, inspect text or JSON plans, then promote the same package through environments.'],
+];
+
+function ArrowIcon() {
+  return (
+    <svg viewBox="0 0 20 20" aria-hidden="true">
+      <path d="M4 10h11M11 6l4 4-4 4" />
+    </svg>
+  );
+}
 
 export default function Home() {
   return (
     <Layout
-      title="DACPAC-style desired state for PostgreSQL"
-      description="Treat PostgreSQL schema as desired state in Git, then let pgpac diff and apply it safely."
+      title="Desired-state schema management for PostgreSQL"
+      description="Define the PostgreSQL schema you want. Let pgpac package, compare, and safely update the live database to match."
     >
-      <header className={styles.heroBanner}>
-        <div className="container">
-          <div className={styles.heroPanel}>
-            <Heading as="h1" className={styles.heroTitle}>
-              PostgreSQL schema as desired state
-            </Heading>
-            <p className={styles.heroSubtitle}>
-              `pgpac` is DACPAC for Postgres. Your SQL source is the desired state configuration, Git carries
-              the change history, and `pgpac` computes the diff between that intent and a live database.
-            </p>
-            <div className={styles.actions}>
-              <Link className="button button--primary button--lg" to="/manual/learn/quickstart">
-                Read the quickstart
-              </Link>
-              <Link className="button button--secondary button--lg" to="/manual/">
-                Why desired state
-              </Link>
-            </div>
-            <div className={styles.principles}>
-              {principles.map((item) => (
-                <div key={item.label} className={styles.principleCard}>
-                  <p className={styles.principleLabel}>{item.label}</p>
-                  <p className={styles.principleText}>{item.text}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className={styles.codePanel}>
-            <p className={styles.codeLabel}>Workflow</p>
-            <pre className={styles.codeBlock}>
-              <code>{`# SQL in Git is the source of truth
-pgpac build --project app.pgpac --output out/
-
-# Compare desired state to the live target
-pgpac plan --package out/app.pgpkg --connection "postgres://..."
-
-# Apply the reviewed delta
-pgpac apply --package out/app.pgpkg --connection "postgres://..."`}</code>
-            </pre>
-            <p className={styles.codeFootnote}>
-              Keep reasoning in terms of the schema you want. Let `pgpac` reason about the transition.
-            </p>
-          </div>
-        </div>
-      </header>
-      <main>
-        <section className={styles.storySection}>
-          <div className="container">
-            <div className={styles.storyIntro}>
-              <Heading as="h2" className={styles.sectionTitle}>
-                Stop encoding intent as migration choreography
+      <main className={styles.page}>
+        <section className={styles.hero}>
+          <div className={`container ${styles.heroGrid}`}>
+            <div className={styles.heroCopy}>
+              <div className={styles.eyebrow}>
+                <span className={styles.statusDot} />
+                Desired state for PostgreSQL
+              </div>
+              <Heading as="h1" className={styles.heroTitle}>
+                Define the state.
+                <span>Ship the difference.</span>
               </Heading>
-              <p className={styles.sectionText}>
-                Migration-heavy workflows force teams to reason about intermediate steps, ordering, and drift repair.
-                `pgpac` shifts the unit of work back to the schema itself: define the desired state in SQL, keep
-                that state in Git, and plan from the target database&apos;s current reality.
+              <p className={styles.heroLead}>
+                pgpac is the desired-state compiler for PostgreSQL. Describe the schema you want in SQL,
+                compare it with what is running, and apply a safe, reviewable update.
+              </p>
+              <div className={styles.actions}>
+                <Link className={styles.primaryAction} to="/manual/learn/quickstart">
+                  Build your first package <ArrowIcon />
+                </Link>
+                <Link className={styles.secondaryAction} to="/manual/">
+                  Explore the docs
+                </Link>
+              </div>
+              <p className={styles.dacpacNote}>
+                <span>Coming from SQL Server?</span> Think DACPAC-style intent, built natively around PostgreSQL and SQL.
               </p>
             </div>
-            <div className={styles.workflowGrid}>
-              {workflow.map((item) => (
-                <div key={item.step} className={styles.workflowCard}>
-                  <p className={styles.workflowStep}>{item.step}</p>
-                  <Heading as="h3" className={styles.workflowTitle}>
-                    {item.title}
-                  </Heading>
-                  <p className={styles.workflowText}>{item.text}</p>
+
+            <div className={styles.productVisual} aria-label="pgpac desired-state workflow example">
+              <div className={styles.visualGlow} />
+              <div className={styles.sourceCard}>
+                <div className={styles.cardBar}>
+                  <span>desired/</span>
+                  <span className={styles.barMeta}>SQL source</span>
                 </div>
+                <div className={styles.fileTree}>
+                  <div><span className={styles.treeLine} />Tables/accounts.sql</div>
+                  <div><span className={styles.treeLine} />Views/active_accounts.sql</div>
+                  <div><span className={styles.treeLine} />Functions/account_count.sql</div>
+                </div>
+                <pre className={styles.sqlPreview}><code><span>CREATE TABLE</span> accounts {'{'}
+  id uuid <em>PRIMARY KEY</em>,
+  status account_status
+{'}'};</code></pre>
+              </div>
+
+              <div className={styles.compileRail}>
+                <div className={styles.railLine} />
+                <div className={styles.railBadge}>pgpac plan</div>
+                <div className={styles.railArrow}>↓</div>
+              </div>
+
+              <div className={styles.planCard}>
+                <div className={styles.cardBar}>
+                  <span>UPDATE PLAN</span>
+                  <span className={styles.ready}><i /> READY</span>
+                </div>
+                <div className={styles.planRow}>
+                  <span className={styles.add}>+</span>
+                  <span>create type account_status</span>
+                  <span className={styles.planOrder}>01</span>
+                </div>
+                <div className={styles.planRow}>
+                  <span className={styles.change}>~</span>
+                  <span>alter table accounts</span>
+                  <span className={styles.planOrder}>02</span>
+                </div>
+                <div className={styles.planRow}>
+                  <span className={styles.add}>+</span>
+                  <span>create view active_accounts</span>
+                  <span className={styles.planOrder}>03</span>
+                </div>
+                <div className={styles.planFooter}>
+                  <span>desired</span>
+                  <ArrowIcon />
+                  <span>live</span>
+                  <strong>3 operations</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className={styles.heroRule} />
+        </section>
+
+        <section className={styles.processSection}>
+          <div className="container">
+            <div className={styles.sectionHeading}>
+              <p className={styles.kicker}>The pgpac loop</p>
+              <Heading as="h2">From desired state to database update.</Heading>
+              <p>You own the destination. pgpac works out the journey.</p>
+            </div>
+            <div className={styles.workflow}>
+              {workflow.map((item) => (
+                <article className={styles.workflowStep} key={item.number}>
+                  <div className={styles.stepTop}>
+                    <span className={styles.stepNumber}>{item.number}</span>
+                    <span className={styles.stepVerb}>{item.verb}</span>
+                  </div>
+                  <Heading as="h3">{item.title}</Heading>
+                  <p>{item.text}</p>
+                  <code>{item.command}</code>
+                </article>
               ))}
             </div>
           </div>
         </section>
-        <HomepageFeatures />
+
+        <section className={styles.ideaSection}>
+          <div className={`container ${styles.ideaGrid}`}>
+            <div className={styles.ideaCopy}>
+              <p className={styles.kicker}>A familiar idea, a PostgreSQL workflow</p>
+              <Heading as="h2">Manage intent, not a pile of instructions.</Heading>
+              <p>
+                If you know DACPAC, the mental model will feel familiar: package a declarative database model,
+                compare it to a target, then publish the delta. pgpac brings that process to PostgreSQL without
+                trying to make PostgreSQL behave like SQL Server.
+              </p>
+              <Link className={styles.textLink} to="/manual/learn/quickstart">
+                See the complete workflow <ArrowIcon />
+              </Link>
+            </div>
+            <div className={styles.stateDiagram}>
+              <div className={styles.stateBox}>
+                <small>IN GIT</small>
+                <strong>Desired state</strong>
+                <span>versioned SQL</span>
+              </div>
+              <div className={styles.deltaBox}>
+                <span>compare</span>
+                <strong>Δ</strong>
+                <span>review</span>
+              </div>
+              <div className={`${styles.stateBox} ${styles.liveState}`}>
+                <small>POSTGRESQL</small>
+                <strong>Live state</strong>
+                <span>updated safely</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className={styles.qualitiesSection}>
+          <div className="container">
+            <div className={styles.qualitiesGrid}>
+              {qualities.map(([title, text], index) => (
+                <article className={styles.quality} key={title}>
+                  <span>0{index + 1}</span>
+                  <Heading as="h3">{title}</Heading>
+                  <p>{text}</p>
+                </article>
+              ))}
+            </div>
+            <div className={styles.finalCta}>
+              <div>
+                <p className={styles.kicker}>Your schema already has a destination.</p>
+                <Heading as="h2">Make it the source of truth.</Heading>
+              </div>
+              <Link className={styles.primaryAction} to="/manual/learn/installation">
+                Install pgpac <ArrowIcon />
+              </Link>
+            </div>
+          </div>
+        </section>
       </main>
     </Layout>
   );
