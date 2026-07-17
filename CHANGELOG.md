@@ -4,6 +4,8 @@ All notable changes to pgpac are documented in this file.
 
 ## [Unreleased]
 
+- Added linked Magnus Opera branding to the documentation footer.
+
 ## [0.5.0]
 
 

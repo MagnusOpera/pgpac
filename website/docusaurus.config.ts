@@ -2,6 +2,8 @@ import {themes as prismThemes} from 'prism-react-renderer';
 import type {Config} from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 
+const baseUrl = '/pgpac/';
+
 const config: Config = {
   title: 'pgpac',
   tagline: 'Package, diff, and apply PostgreSQL schema state with a Go-native CLI.',
@@ -12,7 +14,7 @@ const config: Config = {
   },
 
   url: 'https://magnusopera.github.io',
-  baseUrl: '/pgpac/',
+  baseUrl,
 
   organizationName: 'MagnusOpera',
   projectName: 'pgpac',
@@ -122,7 +124,7 @@ const config: Config = {
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} Magnus Opera.`,
+      copyright: `© ${new Date().getFullYear()} <a class="footer-brand-link" href="https://magnusopera.io" target="_blank" rel="noopener noreferrer"><img src="${baseUrl}img/magnus-opera-logo.svg" alt="" />Magnus Opera SAS</a>`,
     },
     prism: {
       theme: prismThemes.github,
