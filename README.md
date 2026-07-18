@@ -74,7 +74,7 @@ Current compatibility policy:
 - Docs live under `website/` and are built with Docusaurus.
 - Releases are prepared with `make release-prepare version=X.Y.Z`.
 - Tagged builds create draft GitHub releases with platform archives.
-- Published releases deploy the website to GitHub Pages and update `magnusopera/homebrew-tap`.
+- Published releases update `magnusopera/homebrew-tap`; the website is deployed independently from `main` with the Publish Website workflow.
 
 ## License
 
