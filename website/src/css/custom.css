@@ -19,7 +19,6 @@
 
 .navbar {
   box-shadow: 0 8px 24px rgba(16, 36, 49, 0.08);
-  backdrop-filter: saturate(180%) blur(8px);
 }
 
 .footer--dark {

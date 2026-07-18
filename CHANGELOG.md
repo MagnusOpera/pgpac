@@ -4,6 +4,8 @@ All notable changes to pgpac are documented in this file.
 
 ## [Unreleased]
 
+- Fixed the mobile website navigation so its menu remains fully visible.
+
 ## [0.5.1]
 
 
